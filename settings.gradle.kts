@@ -1,6 +1,3 @@
-val name: String by settings
-rootProject.name = name
-
 pluginManagement {
 	repositories {
 		maven {
@@ -11,3 +8,6 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+
+val name: String by settings
+rootProject.name = name

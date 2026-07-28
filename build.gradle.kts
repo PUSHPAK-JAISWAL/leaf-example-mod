@@ -5,8 +5,6 @@ plugins {
 }
 
 loom {
-    clientOnlyZomboidJar()
-
     mods {
         create(project.name) {
             sourceSet(sourceSets.main.get())
@@ -20,13 +18,14 @@ repositories {
     // Loom adds the essential maven repositories to download libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+    mavenLocal()
 }
 
 dependencies {
     // To change the versions, see gradle/libs.versions.toml
     zomboid(libs.zomboid)
-    mappings(variantOf(libs.leaf.yarn) { classifier("v2") })
-    modImplementation(libs.leaf.loader)
+    implementation(libs.leaf.loader)
+    // implementation(libs.leaf.api)
 }
 
 base {
@@ -36,23 +35,25 @@ base {
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 tasks {
     processResources {
-        inputs.properties(mapOf(
-            "version" to project.version,
-            "loader_version" to libs.versions.leaf.loader.get(),
-            "zomboid_version" to libs.versions.zomboid.get()
-        ))
+        val projectVersion: String = project.version.toString()
+        val loaderVersion: String = libs.versions.leaf.loader.get().replace(".local", "")
+        val zomboidVersion: String = libs.versions.zomboid.get()
+
+        inputs.property("version", projectVersion)
+        inputs.property("loader_version", loaderVersion)
+        inputs.property("zomboid_version", zomboidVersion)
 
         filesMatching("leaf.mod.json") {
             expand(
-                "version" to inputs.properties["version"],
-                "loader_version" to inputs.properties["loader_version"],
-                "zomboid_version" to inputs.properties["zomboid_version"]
+                "version" to projectVersion,
+                "loader_version" to loaderVersion,
+                "zomboid_version" to zomboidVersion
             )
         }
     }
@@ -67,7 +68,7 @@ tasks {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release = 17
+    options.release = 25
 }
 
 // configure the maven publication

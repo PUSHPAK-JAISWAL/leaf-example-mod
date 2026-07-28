@@ -2,14 +2,11 @@ package com.example;
 
 import dev.aoqia.leaf.api.ModInitializer;
 
-import zombie.debug.DebugLog;
-import zombie.debug.DebugLogStream;
+import zombie.debug.DebugType;
 
 public class ExampleMod implements ModInitializer {
     public static final String MOD_ID = "modid";
-    public static final DebugLogStream LOGGER = DebugLog.Mod;
-
-    public static final String GAME_VERSION_CHANGED_EVENT = "GameVersionChanged";
+    public static final DebugType LOGGER = DebugType.General;
 
     @Override
     public void onInitialize() {
