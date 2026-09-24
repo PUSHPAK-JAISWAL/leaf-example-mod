@@ -10,20 +10,13 @@ It is **strongly recommended** that you are informed about Java and Mixin. For J
 
 1. Clone the repository or use the template to create a standalone repository with the code from this one.
 
-2. Open the project in your IDE and let Gradle initialise itself. Due to the nature of Loom and the game's size, this may take a few minutes.
-   If you have your game installed to a different location than Steam's default path, or just want to use a separate installation, make sure you set the environment variable `LEAF_CLIENT_GAME_PATH` to the **absolute path** to your PZ game installation. Restarting your IDE is required after changing environment variables to ensure they update.  Depending on your OS, setting environment variables will be different, so you can google "How to set system environment variables on XYZ operating system".
-   
-   If you are on a bad SSD, this may take 5-10 minutes, or a HDD, this could be 25+ minutes.
-   This process will take up **at least double** of the game's original size on your storage medium
-   (1 copy of the original game installed in Steam and 1 copy in the loom cache)
-   and will be multiplied by how many versions of the game you have cached.
-   You can clear this cache manually for any reason by running the `clearLoomCache` Gradle task or removing the
-   folder at `{userFolder}/.gradle/caches/leaf-loom/`.
+2. Open the project in your IDE and let Gradle initialise itself. The first setup may take a few minutes while the project dependencies are downloaded.
+   If you have your game installed to a different location than Steam's default path, or just want to use a separate installation, set the environment variable `LEAF_CLIENT_GAME_PATH` to the **absolute path** to your PZ game installation. Restart your IDE after changing environment variables so that it picks up the new value. Depending on your OS, setting environment variables will be different, so you can google "How to set system environment variables on XYZ operating system".
 
 3. Generate decompiled game sources by running the `genSources` Gradle task.
    Vineflower is the default and recommended decompiler, though any can be used with the `genSourcesWith{decompiler}` task.
 
-4. Make sure the project is set to use the JDK version that matches the JDK used by the game. For builds `41.78.16` and above, this is Java 17.
+4. Make sure the project is set to use JDK 25. This template targets Java 25 for the current Project Zomboid and Leaf versions.
    [Eclipse Adoptium](https://adoptium.net/) or OpenJDK/similar JDKs are recommended.
 
 5. Ensure the game version is up to date, alongside the loom and loader versions. These can be changed in the `gradle/libs.versions.toml` file. To find the latest loom and loader versions, you can simply go to the respective repository and look at the latest release.
@@ -68,6 +61,18 @@ Keep in mind that not everything you can do 1:1 purely because Project Zomboid i
 #### Why does my mod not show up on the in-game mod list?
 
 Leaf (and subsequent mods) is essentially wrapping around the original game code, meaning that it modifies the game's Java code at runtime. To the game, it doesn't even know that leaf mods exist, as they look like regular Java code.
+
+#### Why do I need to set `LEAF_CLIENT_GAME_PATH`?
+
+The variable tells Leaf Loom which Project Zomboid installation to use for development. It is only needed when your game is not installed in Steam's default location or when you want to use a different installation. The value must be an absolute path to the game folder, not to the executable itself.
+
+#### What does `genSources` do?
+
+`genSources` creates decompiled Project Zomboid sources so that your IDE can show and navigate the game classes while you develop mixins. It does not change the original game files. Run it again after changing the game version.
+
+#### Why does Gradle report an incompatible Java version?
+
+This template is configured for Java 25 in both Gradle and `leaf.mod.json`. Select a JDK 25 installation for the Gradle JVM and the project SDK in your IDE, then reload the Gradle project.
 
 #### Why does installing leaf to the server fail using leaf-installer?
 
